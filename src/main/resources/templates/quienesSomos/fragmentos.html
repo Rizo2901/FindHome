@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+    <head th:replace="~{layout/Plantilla :: head}">
+        <title>TODO supply a title</title>
+    </head>
+    <body>
+        <section th:fragment="quienesSomos">
+            <div class="container mt-5 pt-5">
+                <div class="row">
+                    <div class="col-md-12 mx-auto">
+                        <div class="card">
+                            <div class="card-header bg-dark text-center text-white">
+                                <p class="card-title">[[#{nosotros.titulo}]]</p>
+                            </div>
+                            <div class="card-body">
+                                <div class="card w-80">
+                                    <div class="card-body border border-black">
+                                        <h5 class="card-title">[[#{nosotros.titulo}]]</h5>
+                                        <p class="card-text">[[#{nosotros.titulo.texto}]]</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="card w-80">
+                                    <div class="card-body border border-black">
+                                        <h5 class="card-title">[[#{nosotros.objetivo}]]</h5>
+                                        <p class="card-text">[[#{nosotros.objetivo.texto}]]</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="card w-80">
+                                    <div class="card-body  border border-black">
+                                        <h5 class="card-title">[[#{nosotros.paraHacer}]]</h5>
+                                        <p class="card-text">[[#{nosotros.paraHacer.texto1}]]</p>
+                                        <p class="card-text">[[#{nosotros.paraHacer.texto2}]]</p>
+                                        <p class="card-text">[[#{nosotros.paraHacer.texto3}]]</p> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </body>
+</html>

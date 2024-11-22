@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+    <head th:replace="~{layout/Plantilla :: head}">
+        <title>TODO supply a title</title>
+    </head>
+    <body>
+        <section th:fragment="listadoCasas" id="casas">
+            <div class="container mt-5">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header bg-dark text-center text-white">
+                                <p class="card-title">[[#{casa.lista}]]</p>
+                            </div>
+                            <div class="card-body">
+                                <div th:if="${casas != null and !casas.empty}">
+                                    <div class="row row-cols-3 d-flex justify-content-evenly">
+                                        <div class="card mt-5" th:each="c : ${casas}">
+                                            <figure>
+                                                <img th:src="${c.rutaImagen}"
+                                                     class="card-img-top pt-2"
+                                                     height="200"/>
+                                                <figcaption>¢[[${c.precio}]]</figcaption>
+                                            </figure>
+                                            <div class="card-header">
+                                                <p class="prop-title fw-bold">[[#{propiedad.descripcion}]]</p>
+                                                <p class="card-title">[[${c.descripcion}]]</p>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="prop-title fw-bold">[[#{propiedad.ubicacion}]]</p>
+                                                <p class="card-text">[[${c.ubicacion}]]</p>
+                                                <br>
+                                                <p class="prop-title fw-bold">[[#{propiedad.metrosCuadrados}]]</p>
+                                                <p class="card-text">[[${c.metrosCuadrados}]]</p>
+                                                <br>
+                                                <p class="prop-title fw-bold">[[#{propiedad.numHabitaciones}]]</p>
+                                                <p class="card-text">[[${c.cuartos}]]</p>
+                                                <br>
+                                                <p class="prop-title fw-bold">[[#{propiedad.contacto}]]</p>
+                                                <p class="card-text">[[${c.contacto}]]</p>
+                                                <br>
+                                                    <a th:href="@{/casa/eliminar/}+${c.idCasa}"
+                                               class="btn btn-danger mb-2" sec:authorize="hasRole('ROLE_ADMIN')">
+                                                <i class="fas fa-trash"></i></a>
+                                            <a th:href="@{/casa/modifica/}+${c.idCasa}"
+                                               class="btn btn-info mb-2" sec:authorize="hasRole('ROLE_ADMIN')">
+                                                <i class="fas fa-edit"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center p-2" th:if="${casas == null or casas.empty}">
+                            <span>[[#{lista.vacia}]]</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </section>
+
+        <section th:fragment="agregarCasa" id="casa">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-10 mx-auto">
+                        <div class="card border-light mt-5 pt-5">
+                            <div class="card-header text-center bg-dark text-white">
+                                <h5 class="card-title">[[#{propiedad.realizarPublicacion}]]</h5>
+                            </div>
+                            <form th:action="@{/casa/guardar}" th:object="${casa}"
+                                  method="POST" class="was-validated" enctype="multipart/form-data">
+                                <div class="card-body py-2">
+                                    <div class="mb-3">
+                                        <label for="categoria">Categoria</label>
+                                        <select class="form-select" aria-label="Default select example" name="categoria.idCategoria">
+                                            <option th:each="c : ${categoria}"
+                                                    th:value="${c.idCategoria}"
+                                                    th:text="${c.descripcion}"></option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3 py-2">
+                                        <label for="descripcion">[[#{propiedad.descripcion}]]</label>
+                                        <input type="text" class="form-control" name="descripcion" required="true"/>
+                                    </div>
+                                    <div class="mb-3 py-2">
+                                        <label for="metrosCuadrados">[[#{propiedad.metrosCuadrados}]]</label>
+                                        <input type="number" class="form-control" name="metrosCuadrados" required="true"/>
+                                    </div>
+                                    <div class="mb-3 py-2">
+                                        <label for="cuartos">[[#{propiedad.numHabitaciones}]]</label>
+                                        <input type="number" class="form-control" name="cuartos" required="true"/>
+                                    </div>
+                                    <div class="mb-3 py-2">
+                                        <label for="precio">[[#{propiedad.precio}]]</label>
+                                        <input type="number" class="form-control" name="precio" required="true"/>
+                                    </div>
+                                    <div class="mb-3 py-2">
+                                        <label for="contacto">[[#{propiedad.contacto}]]</label>
+                                        <input type="number" class="form-control" name="contacto" required="true"/>
+                                    </div>
+                                    <div class="mb-3 py-2">
+                                        <label for="ubicacion">[[#{propiedad.ubicacion}]]</label>
+                                        <input type="text" class="form-control" name="ubicacion" required="true"/>
+                                    </div>
+                                    <div class="mb-3 py-2">
+                                        <label for="imagen">[[#{propiedad.imagen}]]</label>
+                                        <input class="form-control" type="file" name="imagenFile" required="true" onchange="readURL(this);"/>
+                                        <img id="blah" src="#" alt="your image" height="200"/>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <button class="btn btn-outline-success" type="submit">[[#{accion.agregar}]]</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section th:fragment="editarCasa">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8 mt-5">
+                    <form method="POST"
+                          th:action="@{/casa/guardar}" 
+                          th:object="${casa}"
+                          class="was-validated"                          
+                          enctype="multipart/form-data">
+                        <input type="hidden" name="idCasa" th:field="*{idCasa}"/>
+                        <input type="hidden" name="rutaImagen" th:field="*{rutaImagen}"/>
+                        <section th:replace="~{casa/fragmentos :: botonesEditar}"/>
+                        <div id=details>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="card">
+                                            <div class="card-header bg-dark text-center text-white">
+                                                <h4>[[#{accion.actualizar}]]</h4>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="mb-3">
+                                                    <label for="categoria">[[#{propiedad.categoria}]]</label>
+                                                    <select class="form-select" aria-label="Default select example" name="categoria.idCategoria">
+                                                        <option th:each="c : ${categorias}"
+                                                                th:value="${c.idCategoria}"
+                                                                th:text="${c.descripcion}"></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 py-2">
+                                                <label for="descripcion">[[#{propiedad.descripcion}]]</label>
+                                                <input type="text" class="form-control" name="descripcion" th:field="*{descripcion}" required="true"/>
+                                            </div>
+                                            <div class="mb-3 py-2">
+                                                <label for="metrosCuadrados">[[#{propiedad.metrosCuadrados}]]</label>
+                                                <input type="number" class="form-control" name="metrosCuadrados" th:field="*{metrosCuadrados}" required="true"/>
+                                            </div>
+                                            <div class="mb-3 py-2">
+                                                <label for="cuartos">[[#{propiedad.numHabitaciones}]]</label>
+                                                <input type="number" class="form-control" name="cuartos" th:field="*{cuartos}" required="true"/>
+                                            </div>
+                                            <div class="mb-3 py-2">
+                                                <label for="precio">[[#{propiedad.precio}]]</label>
+                                                <input type="number" class="form-control" name="precio" th:field="*{precio}" required="true"/>
+                                            </div>
+                                            <div class="mb-3 py-2">
+                                                <label for="contacto">[[#{propiedad.contacto}]]</label>
+                                                <input type="number" class="form-control" name="contacto" th:field="*{contacto}" required="true"/>
+                                            </div>
+                                            <div class="mb-3 py-2">
+                                                <label for="ubicacion">[[#{propiedad.ubicacion}]]</label>
+                                                <input type="text" class="form-control" name="ubicacion" th:field="*{ubicacion}" required="true"/>
+                                            </div>
+                                            <div class="mb-3 py-2">
+                                                <label for="imagen">[[#{propiedad.imagen}]]</label>
+                                                <input class="form-control" type="file" name="imagenFile" onchange="readURL(this);"/>
+                                                <img id="blah" th:src="@{${casa.rutaImagen}}" alt="your image" height="200"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                </form>
+            </div>
+            </div>
+        </section>
+
+        <!-- 5 Fragmento que se utiliza en el fragmento anterior -->
+        <section th:fragment="botonesEditar">
+            <div class="container py-4 mb-4 bg-light">
+                <div class="row">
+                    <div class="col-md-4 d-grid">
+                        <a th:href="@{/casa/listado}" class="btn btn-primary">
+                            <i class="fas fa-arrow-left"></i> [[#{accion.regresar}]]
+                        </a>
+                    </div>
+                    <div class="col-md-4 d-grid">                                
+                        <a th:href="@{/casa/eliminar/}+${casa.idCasa}"
+                           class="btn btn-danger">
+                            <i class="fas fa-trash"></i> [[#{accion.eliminar}]]
+                        </a>
+                    </div>
+                    <div class="col-md-4 d-grid">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check"></i> [[#{accion.guardar}]]
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </body>
+</html>

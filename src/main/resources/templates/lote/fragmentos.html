@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+    <head th:replace="~{layout/Plantilla :: head}">
+        <title>TODO supply a title</title>
+    </head>
+    <body>
+        <section th:fragment="listadoLotes" id="lotes">
+            <div class="container mt-5">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header bg-dark text-center text-white">
+                                <p class="card-title">Lista de Lotes</p>
+                            </div>
+                            <div class="card-body">
+                                <div th:if="${lotes != null and !lotes.empty}">
+                                    <div class="row row-cols-3 d-flex justify-content-evenly">
+                                        <div class="card mt-5" th:each="l : ${lotes}">
+                                            <figure>
+                                                <img th:src="${l.rutaImagen}"
+                                                     class="card-img-top pt-2"
+                                                     height="200"/>
+                                                <figcaption>¢[[${l.precio}]]</figcaption>
+                                            </figure>
+                                            <div class="card-header">
+                                                <p class="prop-title fw-bold">[[#{propiedad.descripcion}]]</p>
+                                                <p class="card-title">[[${l.descripcion}]]</p>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="prop-title fw-bold">[[#{propiedad.ubicacion}]]</p>
+                                                <p class="card-text">[[${l.ubicacion}]]</p>
+                                                <br>
+                                                <p class="prop-title fw-bold">[[#{propiedad.metrosCuadrados}]]</p>
+                                                <p class="card-text">[[${l.metrosCuadrados}]]</p>
+                                                <br>
+                                                <p class="prop-title fw-bold">[[#{propiedad.contacto}]]</p>
+                                                <p class="card-text">[[${l.contacto}]]</p>
+                                                <br>
+                                            <a th:href="@{/lote/eliminar/}+${l.idLote}"
+                                               class="btn btn-danger mb-2" sec:authorize="hasRole('ROLE_ADMIN')">
+                                                <i class="fas fa-trash"></i></a>
+                                            <a th:href="@{/lote/modifica/}+${l.idLote}"
+                                               class="btn btn-info mb-2" sec:authorize="hasRole('ROLE_ADMIN')">
+                                                <i class="fas fa-edit"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center p-2" th:if="${lotes == null or lotes.empty}">
+                            <span>[[#{lista.vacia}]]</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section th:fragment="agregarLote" id="lote">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-10 mx-auto">
+                        <div class="card border-light mt-5 pt-5">
+                            <div class="card-header text-center bg-dark text-white">
+                                <h5 class="card-title">[[#{propiedad.realizarPublicacion}]]</h5>
+                            </div>
+                            <form th:action="@{/lote/guardar}" th:object="${lote}"
+                                  method="POST" class="was-validated" enctype="multipart/form-data">
+                                <div class="card-body py-2">
+                                    <div class="mb-3">
+                                        <label for="categoria">[[#{propiedad.categoria}]]</label>
+                                        <select class="form-select" aria-label="Default select example" name="categoria.idCategoria">
+                                            <option th:each="c : ${categoria}"
+                                                    th:value="${c.idCategoria}"
+                                                    th:text="${c.descripcion}"></option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3 py-2">
+                                        <label for="descripcion">[[#{propiedad.descripcion}]]</label>
+                                        <input type="text" class="form-control" name="descripcion" required="true"/>
+                                    </div>
+                                    <div class="mb-3 py-2">
+                                        <label for="metrosCuadrados">[[#{propiedad.metrosCuadrados}]]</label>
+                                        <input type="number" class="form-control" name="metrosCuadrados" required="true"/>
+                                    </div>
+                                    <div class="mb-3 py-2">
+                                        <label for="precio">[[#{propiedad.precio}]]</label>
+                                        <input type="number" class="form-control" name="precio" required="true"/>
+                                    </div>
+                                    <div class="mb-3 py-2">
+                                        <label for="contacto">[[#{propiedad.contacto}]]</label>
+                                        <input type="number" class="form-control" name="contacto" required="true"/>
+                                    </div>
+                                    <div class="mb-3 py-2">
+                                        <label for="ubicacion">[[#{propiedad.ubicacion}]]</label>
+                                        <input type="text" class="form-control" name="ubicacion" required="true"/>
+                                    </div>
+                                    <div class="mb-3 py-2">
+                                        <label for="imagen">[[#{propiedad.imagen}]]</label>
+                                        <input class="form-control" type="file" name="imagenFile" required="true" onchange="readURL(this);"/>
+                                        <img id="blah" src="#" alt="your image" height="200"/>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <button class="btn btn-outline-success" type="submit">Agregar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section th:fragment="editarLote">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8 mt-5">
+                    <form method="POST"
+                          th:action="@{/lote/guardar}" 
+                          th:object="${lote}"
+                          class="was-validated"                          
+                          enctype="multipart/form-data">
+                        <input type="hidden" name="idLote" th:field="*{idLote}"/>
+                        <input type="hidden" name="rutaImagen" th:field="*{rutaImagen}"/>
+                        <section th:replace="~{lote/fragmentos :: botonesEditar}"/>
+                        <div id=details>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="card">
+                                            <div class="card-header bg-dark text-center text-white">
+                                                <h4>[[#{accion.actualizar}]]</h4>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="mb-3">
+                                                    <label for="categoria">[[#{producto.categoria}]]</label>
+                                                    <select class="form-select" aria-label="Default select example" name="categoria.idCategoria">
+                                                        <option th:each="c : ${categorias}"
+                                                                th:value="${c.idCategoria}"
+                                                                th:text="${c.descripcion}"></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 py-2">
+                                                <label for="descripcion">[[#{propiedad.descripcion}]]</label>
+                                                <input type="text" class="form-control" name="descripcion" th:field="*{descripcion}" required="true"/>
+                                            </div>
+                                            <div class="mb-3 py-2">
+                                                <label for="metrosCuadrados">[[#{propiedad.metrosCuadrados}]]</label>
+                                                <input type="number" class="form-control" name="metrosCuadrados" th:field="*{metrosCuadrados}" required="true"/>
+                                            </div>
+                                            <div class="mb-3 py-2">
+                                                <label for="precio">[[#{propiedad.precio}]]</label>
+                                                <input type="number" class="form-control" name="precio" th:field="*{precio}" required="true"/>
+                                            </div>
+                                            <div class="mb-3 py-2">
+                                                <label for="contacto">[[#{propiedad.contacto}]]</label>
+                                                <input type="number" class="form-control" name="contacto" th:field="*{contacto}" required="true"/>
+                                            </div>
+                                            <div class="mb-3 py-2">
+                                                <label for="ubicacion">[[#{propiedad.ubicacion}]]</label>
+                                                <input type="text" class="form-control" name="ubicacion" th:field="*{ubicacion}" required="true"/>
+                                            </div>
+                                            <div class="mb-3 py-2">
+                                                <label for="imagen">[[#{propiedad.imagen}]]</label>
+                                                <input class="form-control" type="file" name="imagenFile" onchange="readURL(this);"/>
+                                                <img id="blah" th:src="@{${lote.rutaImagen}}" alt="your image" height="200"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                </form>
+            </div>
+            </div>
+        </section>
+
+        <!-- 5 Fragmento que se utiliza en el fragmento anterior -->
+        <section th:fragment="botonesEditar">
+            <div class="container py-4 mb-4 bg-light">
+                <div class="row">
+                    <div class="col-md-4 d-grid">
+                        <a th:href="@{/lote/listado}" class="btn btn-primary">
+                            <i class="fas fa-arrow-left"></i> [[#{accion.regresar}]]
+                        </a>
+                    </div>
+                    <div class="col-md-4 d-grid">                                
+                        <a th:href="@{/lote/eliminar/}+${lote.idLote}"F
+                           class="btn btn-danger">
+                            <i class="fas fa-trash"></i> [[#{accion.eliminar}]]
+                        </a>
+                    </div>
+                    <div class="col-md-4 d-grid">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check"></i> [[#{accion.guardar}]]
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </body>
+</html>

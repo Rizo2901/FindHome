@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+    <head th:replace="~{layout/Plantilla :: head}">
+        <title>TODO supply a title</title>
+    </head>
+    <body>
+        <section th:fragment="infoContacto">
+            <div class="container mt-5 pt-5">
+                <div class="row">
+                    <div class="col-md-12 mx-auto">
+                        <div class="card">
+                            <div class="card-header bg-dark text-center text-white">
+                                <p class="card-title"> [[#{contacto.info}]]</p>
+                            </div>
+                            <div class="card-body">
+                                <div class="card w-80">
+                                    <div class="card-body border border-black">
+                                        <i class="fas fa-mail-bulk"> [[#{contacto.correo}]]</i>
+                                        <p class="card-text">findhomecr@gmail.com</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="card w-80">
+                                    <div class="card-body border border-black">
+                                        <i class="fab fa-instagram"> Instagram</i>
+                                        <p class="card-text">@findhomecr</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="card w-80">
+                                    <div class="card-body  border border-black">
+                                        <i class="fab fa-facebook-square"> Facebook</i>
+                                        <p class="card-text">Find Home CR</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </body>
+</html>
